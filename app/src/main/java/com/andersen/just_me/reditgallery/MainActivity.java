@@ -6,9 +6,11 @@ import android.support.v4.app.SupportActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -46,8 +48,7 @@ public class MainActivity extends SupportActivity {
 
     public static RequestQueue mRequestQueue = null;
 
-    private static View.OnTouchListener enableChildren = (view, motionEvent) -> false;
-    private static View.OnTouchListener disableChildren = (view, motionEvent) -> true;
+    public int DISPLAY_WIDTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +56,16 @@ public class MainActivity extends SupportActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        DISPLAY_WIDTH = size.x;
+
         LinearLayoutManager llm = new LinearLayoutManager(this);
         imagesRV.setLayoutManager(llm);
+
+        imagesRV.setItemViewCacheSize(30);
+        imagesRV.setDrawingCacheEnabled(true);
 
         mRequestQueue = Volley.newRequestQueue(getBaseContext());
         loadImages(newB);
@@ -95,10 +104,11 @@ public class MainActivity extends SupportActivity {
     private Response.Listener<JSONObject> successListener = (response) -> {
         disableButtons(false);
         ArrayList<ImageData> imageDatas = parseImages(response);
-        imagesRV.setAdapter(new GalleryAdapter(MainActivity.this, imageDatas));
+        imagesRV.setAdapter(new GalleryAdapter(MainActivity.this, imageDatas, DISPLAY_WIDTH));
     };
     private Response.ErrorListener errorListener = (error) -> {
         disableButtons(false);
+        Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
         Log.e(TAG, "Error message is " + error.getMessage() + "; error cause is " + error.getCause()
                 + "; Response is " + ((error.networkResponse == null) ? "null" : new String(error.networkResponse.data)));
     };
