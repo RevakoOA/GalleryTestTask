@@ -7,6 +7,9 @@
     <com.andersen.just_me.reditgallery.FullWidthImageView
         android:id="@+id/imageFWIV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/placeholder"
+        android:scaleType="centerCrop"
+        android:layout_margin="2dp"/>
 
 </LinearLayout>

@@ -8,10 +8,16 @@
         android:id="@+id/imageLeftSIV"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/placeholder"
+        android:scaleType="centerCrop"
+        android:layout_margin="2dp"/>
     <com.andersen.just_me.reditgallery.SquaredImageView
         android:id="@+id/imageRightSIV"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/placeholder"
+        android:scaleType="centerCrop"
+        android:layout_margin="2dp"/>
 </LinearLayout>

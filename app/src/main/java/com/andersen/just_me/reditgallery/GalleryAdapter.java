@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -66,7 +67,9 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Picasso.with(context).load(imageDatas.get(position+position/2).thumbnail)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
-                        .fit().into(viewHolderOne.imageViewFW);
+                        .fit()
+                        .centerCrop()
+                        .into(viewHolderOne.imageViewFW);
                 break;
 
             case TYPE_DOUBLE_IMAGE:
@@ -74,10 +77,12 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Picasso.with(context).load(imageDatas.get(position+position/2).thumbnail).placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
                         .fit()
+                        .centerCrop()
                         .into(viewHolderTwo.imageLeft);
                 Picasso.with(context).load(imageDatas.get(position+position/2 + 1).thumbnail).placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
                         .fit()
+                        .centerCrop()
                         .into(viewHolderTwo.imageRight);
                 break;
         }
