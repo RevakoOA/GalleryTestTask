@@ -5,20 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-import static android.widget.ImageView.ScaleType.CENTER_CROP;
 
 /**
  * Created by just_me on 03.08.16.
@@ -28,17 +23,17 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final static int TYPE_FULL_IMAGE = 0;
     private final static int TYPE_DOUBLE_IMAGE = 1;
     private final Context context;
-    private final List<String> urls = new ArrayList<>();
+    private List<ImageData> imageDatas = new ArrayList<>();
     Picasso picasso;
 
-    public GalleryAdapter(Context context, String[] picturesURLs, final String userID) {
+    public GalleryAdapter(Context context, List<ImageData> picturesData) {
         this.context = context;
 
         picasso = new Picasso.Builder(context).build();
 
         // Ensure we get a different ordering of images on each run.
-        Collections.addAll(urls, picturesURLs);
-        Collections.shuffle(urls);
+        imageDatas = picturesData;
+        Collections.shuffle(imageDatas);
     }
 
     @Override
@@ -68,7 +63,7 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         switch (holder.getItemViewType()) {
             case TYPE_FULL_IMAGE:
                 ImageViewOne viewHolderOne = (ImageViewOne)holder;
-                Picasso.with(context).load(position+position/2)
+                Picasso.with(context).load(imageDatas.get(position+position/2).thumbnail)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
                         .fit().into(viewHolderOne.imageViewFW);
@@ -76,11 +71,11 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             case TYPE_DOUBLE_IMAGE:
                 ImageViewTwo viewHolderTwo = (ImageViewTwo)holder;
-                Picasso.with(context).load(position+position/2).placeholder(R.drawable.placeholder)
+                Picasso.with(context).load(imageDatas.get(position+position/2).thumbnail).placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
                         .fit()
                         .into(viewHolderTwo.imageLeft);
-                Picasso.with(context).load(position+position/2 + 1).placeholder(R.drawable.placeholder)
+                Picasso.with(context).load(imageDatas.get(position+position/2 + 1).thumbnail).placeholder(R.drawable.placeholder)
                         .error(R.drawable.error)
                         .fit()
                         .into(viewHolderTwo.imageRight);
@@ -90,7 +85,7 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return urls.size()/2 + 1;
+        return imageDatas.size()/2 + 1;
     }
 
     @Override

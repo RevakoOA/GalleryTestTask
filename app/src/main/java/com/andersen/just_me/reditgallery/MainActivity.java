@@ -3,6 +3,7 @@ package com.andersen.just_me.reditgallery;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.SupportActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
@@ -53,6 +54,9 @@ public class MainActivity extends SupportActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        imagesRV.setLayoutManager(llm);
+
         mRequestQueue = Volley.newRequestQueue(getBaseContext());
     }
 
@@ -82,6 +86,7 @@ public class MainActivity extends SupportActivity {
 
     private Response.Listener<JSONObject> successListener = (response) -> {
         ArrayList<ImageData> imageDatas = parseImages(response);
+        imagesRV.setAdapter(new GalleryAdapter(MainActivity.this, imageDatas));
     };
     private Response.ErrorListener errorListener = (error) -> {
         Log.e(TAG, "Error message is " + error.getMessage() + "; error cause is " + error.getCause()
