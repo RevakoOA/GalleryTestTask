@@ -132,12 +132,12 @@ public class MainActivity extends SupportActivity {
                 resolutions = urlsOfImage.getJSONArray("resolutions");
                 for (int j = 0; j < resolutions.length(); j++) {
                     resolution = resolutions.getJSONObject(j);
-                    urls.add(resolution.getString("url"));
+                    urls.add(resolution.getString("url").replaceAll("amp;", ""));
                     sizes.add(new Point(resolution.getInt("width"), resolution.getInt("height")));
                 }
                 // get biggest src
                 resolution = urlsOfImage.getJSONObject("source");
-                urls.add(resolution.getString("url"));
+                urls.add(resolution.getString("url").replaceAll("amp;", ""));
                 sizes.add(new Point(resolution.getInt("width"), resolution.getInt("height")));
                 datas.add(new ImageData(imageData.getString("title"), imageData.getString("author"), imageData.getString("thumbnail"), urls, sizes));
                 urls = new ArrayList<>();

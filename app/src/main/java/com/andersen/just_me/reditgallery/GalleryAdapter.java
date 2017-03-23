@@ -41,7 +41,7 @@ final class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         // Ensure we get a different ordering of images on each run.
         imageDatas = picturesData;
-        Collections.shuffle(imageDatas);
+//        Collections.shuffle(imageDatas);
     }
 
     @Override
