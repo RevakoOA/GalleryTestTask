@@ -6,11 +6,10 @@ import android.support.v4.app.SupportActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Size;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +46,9 @@ public class MainActivity extends SupportActivity {
 
     public static RequestQueue mRequestQueue = null;
 
+    private static View.OnTouchListener enableChildren = (view, motionEvent) -> false;
+    private static View.OnTouchListener disableChildren = (view, motionEvent) -> true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +59,11 @@ public class MainActivity extends SupportActivity {
         imagesRV.setLayoutManager(llm);
 
         mRequestQueue = Volley.newRequestQueue(getBaseContext());
+        loadImages(newB);
     }
 
     @OnClick({R.id.topB, R.id.newB})
-    public void clickTop(Button button) {
+    public void loadImages(Button button) {
         String url = null;
         switch (button.getId()) {
             case R.id.topB:
@@ -72,7 +74,13 @@ public class MainActivity extends SupportActivity {
                 break;
         }
         Log.d(TAG, "Url set to " + url);
+        disableButtons(true);
         makeRemote(Request.Method.GET, url, null, successListener, errorListener);
+    }
+
+    private void disableButtons(boolean disable) {
+        topB.setClickable(!disable);
+        newB.setClickable(!disable);
     }
 
     public static void makeRemote(int method, String url, JSONObject payload, Response.Listener<JSONObject> success, Response.ErrorListener failure) {
@@ -85,10 +93,12 @@ public class MainActivity extends SupportActivity {
     }
 
     private Response.Listener<JSONObject> successListener = (response) -> {
+        disableButtons(false);
         ArrayList<ImageData> imageDatas = parseImages(response);
         imagesRV.setAdapter(new GalleryAdapter(MainActivity.this, imageDatas));
     };
     private Response.ErrorListener errorListener = (error) -> {
+        disableButtons(false);
         Log.e(TAG, "Error message is " + error.getMessage() + "; error cause is " + error.getCause()
                 + "; Response is " + ((error.networkResponse == null) ? "null" : new String(error.networkResponse.data)));
     };
